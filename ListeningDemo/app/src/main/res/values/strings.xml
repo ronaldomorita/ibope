@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Listening Demo</string>
+    <string name="ButtonListen">Gravar</string>
+    <string name="ButtonSeeLogs">Ver Logs</string>
+    <string name="TextListening">Atualmente Escutando...</string>
+    <string name="ButtonStop">Parar</string>
+    <string name="TitleLogs">Logs</string>
+    <string name="ButtonClose">Fechar</string>
+    <string name="Move2Disclaimer">Move 2 The Next Level</string>
+    <string name="ButtonPlay"><![CDATA[I> Play]]></string>
+</resources>

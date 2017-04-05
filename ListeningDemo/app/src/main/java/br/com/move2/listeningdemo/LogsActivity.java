@@ -1,0 +1,209 @@
+package br.com.move2.listeningdemo;
+
+import android.content.Intent;
+import android.media.AudioManager;
+import android.media.AudioTrack;
+import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class LogsActivity extends AppCompatActivity {
+
+    private String filePath;
+    private static final String TEXT_TO_SEARCH = "havaianas";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_logs);
+
+        Button play = (Button) findViewById(R.id.buttonPlay);
+        play.setOnClickListener(playAudio);
+
+        Button close = (Button) findViewById(R.id.buttonClose);
+        close.setOnClickListener(backToHome);
+
+        filePath = AudioRecorder.getFilePath(getBaseContext());
+        File file = new File(filePath);
+        String logContent;
+        if(file.exists()){
+            file.setReadable(true,false);
+            logContent = "Arquivo "+file.getName() + " encontrado. Clique em \"Play\" para gerar o log";
+        }else{
+            logContent = "nenhum arquivo gravado ainda. clique em \"Fechar\" e então em \"Escutar\"";
+        }
+
+        TextView text1 = (TextView) findViewById(R.id.text1);
+        text1.setText(text1.getText()+"\n"+logContent);
+    }
+
+    private View.OnClickListener backToHome = new View.OnClickListener(){
+        public void onClick(View v){
+            Intent intent = new Intent();
+            intent.setClass(LogsActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    };
+
+    private View.OnClickListener playAudio = new View.OnClickListener(){
+        public void onClick(View v){
+            try{
+                playShortAudioFileViaAudioTrack();
+            }catch (IOException e){
+                //>>>>>>
+                Log.i(LogsActivity.class.getName(), "erro ao abrir arquivo para reprodução", e);
+                //<<<<<<
+            }
+        }
+    };
+
+    private void playShortAudioFileViaAudioTrack() throws IOException{
+        if (filePath==null){
+            return;
+        }
+
+        SpeechRecognizer sr = SpeechRecognizer.createSpeechRecognizer(this.getBaseContext());
+        sr.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onResults(Bundle results) {
+                // process results here
+                ArrayList<String> strList = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if(strList!=null && strList.size()>0){
+                    TextView text1 = (TextView) findViewById(R.id.text1);
+                    int countSearch = 0;
+                    //>>>>>>
+                    for (int i=0; i<strList.size(); i++){
+                        String text = strList.get(i).toLowerCase();
+                        int count=0;
+                        while(text.contains(TEXT_TO_SEARCH)){
+                            count ++;
+                            text = text.substring(0,text.lastIndexOf(TEXT_TO_SEARCH));
+                        }
+                        countSearch = Math.max(countSearch,count);
+                        //>>>>>>
+                        Log.w(LogsActivity.class.getName(), strList.get(i));
+                        //<<<<<<
+                    }
+                    text1.setText("Transcrição mais provável:\n"+strList.get(0));
+                    if(countSearch>0){
+                        text1.setText("\n"+text1.getText()+"\nTotal máximo de "+TEXT_TO_SEARCH+": "+countSearch);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onPartialResults(Bundle partialResults) {
+                ArrayList<String> strList = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                for (int i=0; i<strList.size(); i++){
+                    String text = strList.get(i).toLowerCase();
+                    //>>>>>>
+                    Log.i(LogsActivity.class.getName(), strList.get(i));
+                    //<<<<<<
+                }
+
+            }
+
+            @Override
+            public void onEvent(int eventType, Bundle params) {
+
+            }
+
+            @Override
+            public void onReadyForSpeech(Bundle params) {
+                //Reading the file..
+                File file = new File(filePath); // for ex. path= "/sdcard/samplesound.pcm" or "/sdcard/samplesound.wav"
+                byte[] byteData = new byte[(int) file.length()];
+                //>>>>>>
+                Log.d(getClass().getName(), "file length: "+file.length());
+                //<<<<<<
+
+                FileInputStream in = null;
+                try {
+                    in = new FileInputStream( file );
+                    in.read( byteData );
+                    in.close();
+                } catch (Exception e) {
+                    //>>>>>>
+                    Log.e(getClass().getName(), "erro ao abrir arquivo", e);
+                    //<<<<<<
+                }
+
+                AudioTrack at = new AudioTrack(
+                        AudioManager.STREAM_MUSIC, AudioRecorder.SAMPLE_RATE_IN_HZ,
+                        AudioRecorder.CHANNEL_OUT_CONFIG, AudioRecorder.AUDIO_FORMAT,
+                        AudioRecorder.BUFFER_SIZE, AudioTrack.MODE_STREAM);
+                if (at!=null) {
+                    at.play();
+                    // Write the byte array to the track
+                    at.write(byteData, 0, byteData.length);
+                    at.stop();
+                    at.release();
+                }
+                else {
+                    //>>>>>>
+                    Log.w(getClass().getName(), "audio track is not initialised");
+                    //<<<<<<
+                }
+
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+                //>>>>>>
+                Log.d(getClass().getName(), "começou a falar");
+                //<<<<<<
+            }
+
+            @Override
+            public void onRmsChanged(float rmsdB) {
+
+            }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+                //>>>>>>
+                Log.d(getClass().getName(), "terminou de falar");
+                //<<<<<<
+            }
+
+            @Override
+            public void onError(int error) {
+
+            }
+
+        });
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        // the following appears to be a requirement, but can be a "dummy" value
+        //intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.move2");
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS,true);
+        // define any other intent extras you want
+
+        // start playback of audio clip here
+
+        // this will start the speech recognizer service in the background
+        // without starting a separate activity
+        sr.startListening(intent);
+        //sr.stopListening();
+
+
+    }
+
+}
