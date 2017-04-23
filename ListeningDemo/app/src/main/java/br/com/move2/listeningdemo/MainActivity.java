@@ -16,18 +16,43 @@ public class MainActivity extends AppCompatActivity {
         Button listen = (Button) findViewById(R.id.buttonRecord);
         listen.setOnClickListener(startListening);
 
+        Button sample = (Button) findViewById(R.id.buttonSample);
+        sample.setOnClickListener(startSample);
+
         Button logs = (Button) findViewById(R.id.buttonLogs);
         logs.setOnClickListener(goToLogs);
+
+        Button internet = (Button) findViewById(R.id.buttonInternet);
+        internet.setOnClickListener(goToInternetTest);
+
+        Button exit = (Button) findViewById(R.id.buttonExit);
+        exit.setOnClickListener(exitApp);
     }
 
     private View.OnClickListener startListening = new View.OnClickListener(){
         public void onClick(View v){
             Intent service = new Intent();
             service.setClass(MainActivity.this, AudioRecorderService.class);
+            service.putExtra("AudioType", AudioRecorder.TYPE_RECORDED);
             startService(service);
 
             Intent activity = new Intent();
             activity.setClass(MainActivity.this, ListeningActivity.class);
+            startActivity(activity);
+
+            finish();
+        }
+    };
+
+    private View.OnClickListener startSample = new View.OnClickListener(){
+        public void onClick(View v){
+            Intent service = new Intent();
+            service.setClass(MainActivity.this, AudioRecorderService.class);
+            service.putExtra("AudioType", AudioRecorder.TYPE_SAMPLE);
+            startService(service);
+
+            Intent activity = new Intent();
+            activity.setClass(MainActivity.this, SampleActivity.class);
             startActivity(activity);
 
             finish();
@@ -40,6 +65,22 @@ public class MainActivity extends AppCompatActivity {
             intent.setClass(MainActivity.this, LogsActivity.class);
             startActivity(intent);
             finish();
+        }
+    };
+
+    private View.OnClickListener goToInternetTest = new View.OnClickListener(){
+        public void onClick(View v){
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, InternetTestActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    };
+
+    private View.OnClickListener exitApp = new View.OnClickListener(){
+        public void onClick(View v){
+            finish();
+            System.exit(0);
         }
     };
 }

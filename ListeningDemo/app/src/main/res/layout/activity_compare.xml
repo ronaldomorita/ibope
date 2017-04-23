@@ -20,11 +20,11 @@
         app:srcCompat="@drawable/move2logo" />
 
     <TextView
-        android:id="@+id/headerLogs"
+        android:id="@+id/headerCompare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="@string/TitleLogs"
+        android:text="@string/TitleCompare"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -33,7 +33,7 @@
         app:layout_constraintVertical_bias="0.12" />
 
     <TextView
-        android:id="@+id/textLogs"
+        android:id="@+id/textCompare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
@@ -45,39 +45,11 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerLogs"
+        app:layout_constraintTop_toBottomOf="@+id/headerCompare"
         app:layout_constraintVertical_bias="0.12" />
 
     <Button
-        android:id="@+id/buttonPlayRecord"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="48dp"
-        android:background="@color/BackgroundButtons"
-        android:text="@string/ButtonPlayRecord"
-        android:textAppearance="@style/TextAppearance.AppCompat.Button"
-        android:textColor="@android:color/white"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLogs" />
-
-    <Button
-        android:id="@+id/buttonPlaySample"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="48dp"
-        android:background="@color/BackgroundButtons"
-        android:text="@string/ButtonPlaySample"
-        android:textAppearance="@style/TextAppearance.AppCompat.Button"
-        android:textColor="@android:color/white"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonPlayRecord" />
-
-    <Button
-        android:id="@+id/buttonCloseLogs"
+        android:id="@+id/buttonCloseCompare"
         android:layout_width="88dp"
         android:layout_height="48dp"
         android:layout_marginTop="24dp"
@@ -88,6 +60,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonPlaySample" />
+        app:layout_constraintTop_toBottomOf="@+id/textCompare" />
 
 </android.support.constraint.ConstraintLayout>

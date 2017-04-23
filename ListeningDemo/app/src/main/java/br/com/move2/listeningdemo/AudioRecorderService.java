@@ -20,10 +20,12 @@ public class AudioRecorderService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        int audioType = intent.getIntExtra("AudioType",AudioRecorder.NO_TYPE_DEFINED);
+
         //>>>>>>
-        Log.d(getClass().getName(), "construindo o serviço");
+        Log.d(getClass().getName(), "construindo o serviço. audioType="+audioType);
         //<<<<<<
-        recorder = new AudioRecorder(getBaseContext());
+        recorder = new AudioRecorder(getBaseContext(), audioType);
         recorder.start();
         //>>>>>>
         Log.d(getClass().getName(), "serviço iniciado");

@@ -1,11 +1,17 @@
 <resources>
     <string name="app_name">Listening Demo</string>
     <string name="ButtonListen">Gravar</string>
+    <string name="ButtonSample">Gerar Amostra</string>
     <string name="ButtonSeeLogs">Ver Logs</string>
-    <string name="TextListening">Atualmente Escutando...</string>
+    <string name="ButtonSeeInternet">Testar Internet</string>
+    <string name="TextExit">Sair</string>
+    <string name="TextListening">Gravando...</string>
+    <string name="TextSample">Gravando Amostra...</string>
     <string name="ButtonStop">Parar</string>
     <string name="TitleLogs">Logs</string>
+    <string name="TitleCompare">Resultado da Comparação</string>
     <string name="ButtonClose">Fechar</string>
     <string name="Move2Disclaimer">Move 2 The Next Level</string>
-    <string name="ButtonPlay"><![CDATA[I> Play]]></string>
+    <string name="ButtonPlayRecord"><![CDATA[I> Play Gravação]]></string>
+    <string name="ButtonPlaySample"><![CDATA[I> Play Amostra]]></string>
 </resources>

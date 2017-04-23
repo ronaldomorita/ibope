@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -19,7 +20,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ListeningActivity"></activity>
+        <activity android:name=".SampleActivity"></activity>
+        <activity android:name=".CompareActivity"></activity>
         <activity android:name=".LogsActivity"></activity>
+        <activity android:name=".InternetTestActivity"></activity>
 
         <service
             android:name=".AudioRecorderService"

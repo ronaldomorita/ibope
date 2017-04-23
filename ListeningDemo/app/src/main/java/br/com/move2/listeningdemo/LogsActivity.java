@@ -20,7 +20,9 @@ import java.util.ArrayList;
 
 public class LogsActivity extends AppCompatActivity {
 
-    private String filePath;
+    private String recordedFilePath;
+    private String sampleFilePath;
+    private String actualFilePath;
     private static final String TEXT_TO_SEARCH = "havaianas";
 
     @Override
@@ -28,24 +30,37 @@ public class LogsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logs);
 
-        Button play = (Button) findViewById(R.id.buttonPlay);
-        play.setOnClickListener(playAudio);
+        Button playRecord = (Button) findViewById(R.id.buttonPlayRecord);
+        playRecord.setOnClickListener(playRecordedAudio);
 
-        Button close = (Button) findViewById(R.id.buttonClose);
+        Button playSample = (Button) findViewById(R.id.buttonPlaySample);
+        playSample.setOnClickListener(playSampleAudio);
+
+        Button close = (Button) findViewById(R.id.buttonCloseLogs);
         close.setOnClickListener(backToHome);
 
-        filePath = AudioRecorder.getFilePath(getBaseContext());
-        File file = new File(filePath);
-        String logContent;
-        if(file.exists()){
-            file.setReadable(true,false);
-            logContent = "Arquivo "+file.getName() + " encontrado. Clique em \"Play\" para gerar o log";
+        recordedFilePath = AudioRecorder.getRecordedFilePath(getBaseContext());
+        File recordedFile = new File(recordedFilePath);
+        String recordedContent;
+        if(recordedFile.exists()){
+            recordedFile.setReadable(true,false);
+            recordedContent = "Arquivo de gravação "+recordedFile.getName() + " encontrado. Clique em \"Play Gravação\" para escutar";
         }else{
-            logContent = "nenhum arquivo gravado ainda. clique em \"Fechar\" e então em \"Escutar\"";
+            recordedContent = "Nenhum arquivo gravado ainda. clique em \"Fechar\" e então em \"Gravar\"";
         }
 
-        TextView text1 = (TextView) findViewById(R.id.text1);
-        text1.setText(text1.getText()+"\n"+logContent);
+        sampleFilePath = AudioRecorder.getSampleFilePath(getBaseContext());
+        File sampleFile = new File(sampleFilePath);
+        String sampleContent;
+        if(sampleFile.exists()){
+            recordedFile.setReadable(true,false);
+            sampleContent = "Arquivo de amostra "+sampleFile.getName() + " encontrado. Clique em \"Play Amostra\" para escutar";
+        }else{
+            sampleContent = "Nenhum arquivo de amostra gravado ainda. clique em \"Fechar\" e então em \"Gravar Amostra\"";
+        }
+
+        TextView text1 = (TextView) findViewById(R.id.textLogs);
+        text1.setText(text1.getText()+"\n"+recordedContent+"\n"+sampleContent);
     }
 
     private View.OnClickListener backToHome = new View.OnClickListener(){
@@ -57,10 +72,10 @@ public class LogsActivity extends AppCompatActivity {
         }
     };
 
-    private View.OnClickListener playAudio = new View.OnClickListener(){
+    private View.OnClickListener playRecordedAudio = new View.OnClickListener(){
         public void onClick(View v){
             try{
-                playShortAudioFileViaAudioTrack();
+                playShortAudioFileViaAudioTrack(recordedFilePath);
             }catch (IOException e){
                 //>>>>>>
                 Log.i(LogsActivity.class.getName(), "erro ao abrir arquivo para reprodução", e);
@@ -69,10 +84,22 @@ public class LogsActivity extends AppCompatActivity {
         }
     };
 
-    private void playShortAudioFileViaAudioTrack() throws IOException{
-        if (filePath==null){
+    private View.OnClickListener playSampleAudio = new View.OnClickListener(){
+        public void onClick(View v){
+            try{
+                playShortAudioFileViaAudioTrack(sampleFilePath);
+            }catch (IOException e){
+                //>>>>>>
+                Log.i(LogsActivity.class.getName(), "erro ao abrir arquivo para reprodução", e);
+                //<<<<<<
+            }
+        }
+    };
+    private void playShortAudioFileViaAudioTrack(String filePath) throws IOException{
+        if (filePath == null){
             return;
         }
+        actualFilePath = filePath;
 
         SpeechRecognizer sr = SpeechRecognizer.createSpeechRecognizer(this.getBaseContext());
         sr.setRecognitionListener(new RecognitionListener() {
@@ -124,7 +151,7 @@ public class LogsActivity extends AppCompatActivity {
             @Override
             public void onReadyForSpeech(Bundle params) {
                 //Reading the file..
-                File file = new File(filePath); // for ex. path= "/sdcard/samplesound.pcm" or "/sdcard/samplesound.wav"
+                File file = new File(actualFilePath); // for ex. path= "/sdcard/samplesound.pcm" or "/sdcard/samplesound.wav"
                 byte[] byteData = new byte[(int) file.length()];
                 //>>>>>>
                 Log.d(getClass().getName(), "file length: "+file.length());

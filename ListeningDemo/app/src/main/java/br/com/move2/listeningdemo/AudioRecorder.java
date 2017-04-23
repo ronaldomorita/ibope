@@ -20,19 +20,27 @@ public class AudioRecorder {
     public static final int CHANNEL_OUT_CONFIG = AudioFormat.CHANNEL_OUT_MONO;
     public static final int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
     public static final int BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE_IN_HZ, CHANNEL_IN_CONFIG, AUDIO_FORMAT);
-    private static final String FILE_NAME = "pacman.pcm";
+
+    public static final int TYPE_RECORDED = 1;
+    public static final int TYPE_SAMPLE = 2;
+    public static final int NO_TYPE_DEFINED = 99;
+
+    private static final String RECORDED_FILE_NAME = "recorded.pcm";
+    private static final String SAMPLE_FILE_NAME = "sample.pcm";
 
     private State state;
+    private int type;
     public AudioRecord audioRecorder = null;
     FileOutputStream os = null;
     volatile Thread t = null;
 
-    public AudioRecorder(Context context)
+    public AudioRecorder(Context context, int typeToRecord)
     {
         //>>>>>>
         Log.d(getClass().getName(), "criando recorder");
         //<<<<<<
         state = State.INITIALIZING;
+        type = typeToRecord;
 
         try {
             audioRecorder = new AudioRecord(SOURCE, SAMPLE_RATE_IN_HZ, CHANNEL_IN_CONFIG, AUDIO_FORMAT, BUFFER_SIZE);
@@ -40,7 +48,15 @@ public class AudioRecorder {
             Log.i(getClass().getName(), "audio recorder criado. state: "+audioRecorder.getState()+" BUFFER_SIZE: "+ BUFFER_SIZE);
             //<<<<<<
 
-            String filePath = getFilePath(context);
+            String filePath;
+            switch (type){
+                case TYPE_SAMPLE:
+                    filePath = getSampleFilePath(context);
+                    break;
+                case TYPE_RECORDED:
+                default:
+                    filePath = getRecordedFilePath(context);
+            }
             //>>>>>>
             Log.i(getClass().getName(), "filePath: "+filePath);
             //<<<<<<
@@ -185,8 +201,18 @@ public class AudioRecorder {
         return state;
     }
 
-    public static String getFilePath(Context context){
-        return context.getFilesDir().getPath()+ File.separator+ FILE_NAME;
+    public int getType()  {
+        return type;
     }
+
+    public static String getRecordedFilePath(Context context){
+        return context.getFilesDir().getPath()+ File.separator+ RECORDED_FILE_NAME;
+    }
+
+    public static String getSampleFilePath(Context context){
+        return context.getFilesDir().getPath()+ File.separator+ SAMPLE_FILE_NAME;
+    }
+
+
 
 }
