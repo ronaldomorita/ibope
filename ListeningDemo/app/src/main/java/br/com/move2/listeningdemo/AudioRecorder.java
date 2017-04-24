@@ -8,6 +8,7 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Environment;
 import android.util.Log;
 
 public class AudioRecorder {
@@ -206,11 +207,21 @@ public class AudioRecorder {
     }
 
     public static String getRecordedFilePath(Context context){
-        return context.getFilesDir().getPath()+ File.separator+ RECORDED_FILE_NAME;
+        return
+                new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),RECORDED_FILE_NAME).getPath();
+
+                //Environment.getExternalStorageDirectory().getPath() +
+                //context.getFilesDir().getPath() +
+                //File.separator + RECORDED_FILE_NAME;
     }
 
     public static String getSampleFilePath(Context context){
-        return context.getFilesDir().getPath()+ File.separator+ SAMPLE_FILE_NAME;
+        return
+                new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),SAMPLE_FILE_NAME).getPath();
+
+                //Environment.getExternalStorageDirectory().getPath() +
+                //context.getFilesDir().getPath() +
+                //File.separator + SAMPLE_FILE_NAME;
     }
 
 

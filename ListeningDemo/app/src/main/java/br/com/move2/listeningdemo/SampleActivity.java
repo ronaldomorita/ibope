@@ -24,7 +24,7 @@ public class SampleActivity extends AppCompatActivity {
             stopService(service);
 
             Intent intent = new Intent();
-            intent.setClass(SampleActivity.this, MainActivity.class);
+            intent.setClass(SampleActivity.this, SendSampleActivity.class);
             startActivity(intent);
             finish();
         }

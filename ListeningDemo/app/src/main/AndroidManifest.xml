@@ -24,6 +24,7 @@
         <activity android:name=".CompareActivity"></activity>
         <activity android:name=".LogsActivity"></activity>
         <activity android:name=".InternetTestActivity"></activity>
+        <activity android:name=".SendSampleActivity"></activity>
 
         <service
             android:name=".AudioRecorderService"

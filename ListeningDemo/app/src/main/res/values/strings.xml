@@ -10,8 +10,11 @@
     <string name="ButtonStop">Parar</string>
     <string name="TitleLogs">Logs</string>
     <string name="TitleCompare">Resultado da Comparação</string>
+    <string name="TitleSendSample">Enviar Amostra</string>
     <string name="ButtonClose">Fechar</string>
     <string name="Move2Disclaimer">Move 2 The Next Level</string>
     <string name="ButtonPlayRecord"><![CDATA[I> Play Gravação]]></string>
     <string name="ButtonPlaySample"><![CDATA[I> Play Amostra]]></string>
+    <string name="SampleName">Digite o nome da amostra:</string>
+    <string name="ButtonSend">Enviar</string>
 </resources>
