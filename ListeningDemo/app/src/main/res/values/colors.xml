@@ -5,4 +5,5 @@
     <color name="colorAccent">#ff4081</color>
     <color name="BackgroundDefault">#b8932f</color>
     <color name="BackgroundButtons">#806208</color>
+    <color name="BackgroundExitButtons">#af2403</color>
 </resources>

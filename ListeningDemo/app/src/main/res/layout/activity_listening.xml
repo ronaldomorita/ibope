@@ -23,10 +23,10 @@
         android:id="@+id/subtitleListening"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="24dp"
         android:text="@string/TextListening"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo1" />
@@ -35,7 +35,7 @@
         android:id="@+id/buttonStopListening"
         android:layout_width="88dp"
         android:layout_height="48dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="12dp"
         android:background="@color/BackgroundButtons"
         android:text="@string/ButtonStop"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
@@ -44,5 +44,43 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/subtitleListening" />
+
+    <TextView
+        android:id="@+id/subtitleCompare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/TitleCompare"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonStopListening"
+        app:layout_constraintVertical_bias="0.12" />
+
+    <WebView
+        android:id="@+id/webCompare"
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subtitleCompare" />
+
+    <Button
+        android:id="@+id/buttonCloseCompare"
+        android:layout_width="88dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/BackgroundButtons"
+        android:text="@string/ButtonClose"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/webCompare" />
 
 </android.support.constraint.ConstraintLayout>

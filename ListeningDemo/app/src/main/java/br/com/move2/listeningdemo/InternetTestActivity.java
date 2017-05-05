@@ -33,19 +33,6 @@ public class InternetTestActivity extends AppCompatActivity {
 
     }
 
-    private View.OnClickListener stopListening = new View.OnClickListener(){
-        public void onClick(View v){
-            Intent service = new Intent();
-            service.setClass(InternetTestActivity.this, AudioRecorderService.class);
-            stopService(service);
-
-            Intent intent = new Intent();
-            intent.setClass(InternetTestActivity.this, CompareActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    };
-
     private View.OnClickListener backToHome = new View.OnClickListener(){
         public void onClick(View v){
             Intent intent = new Intent();

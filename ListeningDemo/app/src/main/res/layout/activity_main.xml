@@ -33,9 +33,9 @@
 
     <Button
         android:id="@+id/buttonRecord"
-        android:layout_width="88dp"
+        android:layout_width="96dp"
         android:layout_height="48dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="36dp"
         android:background="@color/BackgroundButtons"
         android:text="@string/ButtonListen"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
@@ -47,9 +47,9 @@
 
     <Button
         android:id="@+id/buttonSample"
-        android:layout_width="88dp"
+        android:layout_width="96dp"
         android:layout_height="48dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:background="@color/BackgroundButtons"
         android:text="@string/ButtonSample"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
@@ -61,8 +61,8 @@
 
     <Button
         android:id="@+id/buttonLogs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="96dp"
+        android:layout_height="48dp"
         android:layout_marginTop="24dp"
         android:background="@color/BackgroundButtons"
         android:text="@string/ButtonSeeLogs"
@@ -75,8 +75,8 @@
 
     <Button
         android:id="@+id/buttonInternet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="96dp"
+        android:layout_height="48dp"
         android:layout_marginTop="24dp"
         android:background="@color/BackgroundButtons"
         android:text="@string/ButtonSeeInternet"
@@ -89,10 +89,10 @@
 
     <Button
         android:id="@+id/buttonExit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="96dp"
+        android:layout_height="48dp"
         android:layout_marginTop="24dp"
-        android:background="@color/BackgroundButtons"
+        android:background="@color/BackgroundExitButtons"
         android:text="@string/TextExit"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
         android:textColor="@android:color/white"
