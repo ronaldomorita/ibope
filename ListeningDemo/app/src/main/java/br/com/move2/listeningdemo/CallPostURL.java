@@ -29,7 +29,7 @@ public class CallPostURL extends AsyncTask<String, String, String> {
     private static final String DELIMITER = "--";
 
     private static final String RECORDED_URL = "http://ec2-54-224-63-179.compute-1.amazonaws.com/";
-    private static final String SAMPLE_URL = "http://ec2-54-224-63-179.compute-1.amazonaws.com/loadsample/";
+    private static final String SAMPLE_URL = RECORDED_URL + "loadsample/";
     private static final String RECORDED_PARAMNAME = "recorded";
     private static final String SAMPLE_PARAMNAME = "sample";
 
@@ -40,11 +40,18 @@ public class CallPostURL extends AsyncTask<String, String, String> {
     private WebView webForResult;
     private Context context;
 
+    private Runnable restartScript = null;
+
     public CallPostURL(File fileToUpload, int audioType, WebView webForResult, Context context) {
         this.fileToUpload = fileToUpload;
         this.audioType = audioType;
         this.webForResult = webForResult;
         this.context = context;
+    }
+
+    public CallPostURL appendRestartScript(Runnable restartScript){
+        this.restartScript = restartScript;
+        return this;
     }
 
     @Override
@@ -61,7 +68,7 @@ public class CallPostURL extends AsyncTask<String, String, String> {
             //>>>>>>
             Log.e(getClass().getName(), "erro ao chamar upload de arquivo", e);
             //<<<<<<
-            return "<html><body><h3 color=\"red\">Erro ao fazer upload do arquivo: " + e.getMessage() + "</h3></body></html>";
+            return "<html><body><h3><font color=\"red\">Erro ao fazer upload do arquivo: " + e.getMessage() + "</font></h3></body></html>";
         }
     }
 
@@ -72,6 +79,12 @@ public class CallPostURL extends AsyncTask<String, String, String> {
             Toast.makeText(context, result, Toast.LENGTH_LONG).show();
         }else{
             webForResult.loadDataWithBaseURL(null, result, "text/html", CallPostURL.ENCODING, null);
+        }
+        if(restartScript!=null){
+            restartScript.run();
+            //>>>>>>
+            Log.i(getClass().getName(), "reinício");
+            //<<<<<<
         }
     }
 
@@ -169,7 +182,7 @@ public class CallPostURL extends AsyncTask<String, String, String> {
             //>>>>>>
             Log.e(getClass().getName(), "erro ao fazer upload de arquivo", e);
             //<<<<<<
-            return "<html><body><h3 color=\"red\">Erro ao fazer upload do arquivo: " + e.getMessage() + "</h3></body></html>";
+            return "<html><body><h3><font color=\"red\">Erro ao fazer upload do arquivo: " + e.getMessage() + "</font></h3></body></html>";
         }finally {
             if (conn != null) conn.disconnect();
             if (outRequest != null) outRequest.close();

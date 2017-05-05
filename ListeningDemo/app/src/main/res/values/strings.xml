@@ -7,6 +7,7 @@
     <string name="TextExit">Sair</string>
     <string name="TextListening">Gravando...</string>
     <string name="TextSample">Gravando Amostra...</string>
+    <string name="ButtonStart">Iniciar</string>
     <string name="ButtonStop">Parar</string>
     <string name="TitleLogs">Logs</string>
     <string name="TitleCompare">Resultado da Comparação</string>

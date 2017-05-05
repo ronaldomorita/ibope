@@ -31,11 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
     private View.OnClickListener startListening = new View.OnClickListener(){
         public void onClick(View v){
-            Intent service = new Intent();
-            service.setClass(MainActivity.this, AudioRecorderService.class);
-            service.putExtra("AudioType", AudioRecorder.TYPE_RECORDED);
-            startService(service);
-
             Intent activity = new Intent();
             activity.setClass(MainActivity.this, ListeningActivity.class);
             startActivity(activity);
