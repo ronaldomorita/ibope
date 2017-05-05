@@ -2,11 +2,25 @@ package br.com.move2.listeningdemo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class InternetTestActivity extends AppCompatActivity {
 
@@ -15,9 +29,21 @@ public class InternetTestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_internet_test);
 
+        File recFile = new File(AudioRecorder.getRecordedFilePath(getBaseContext()));
+        //File sampFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"PetrobrasLivreEstou.pcm");
+        String content = "<html><body><p>No Content</p></body></html>";
+        try{
+            content = new CallPostURL().postAudio(recFile, AudioRecorder.TYPE_RECORDED);
+            //content = new CallPostURL().postAudio(sampFile, AudioRecorder.TYPE_SAMPLE);
+        }catch (IOException e){
+            //>>>>>>
+            Log.e(getClass().getName(), "erro ao chamar upload de arquivo", e);
+            //<<<<<<
+        }
+
         WebView web1 = (WebView) findViewById(R.id.webTest);
         web1.setWebViewClient(new WebViewClient());
-        web1.loadUrl("http://ec2-54-224-63-179.compute-1.amazonaws.com:8000/");
+        web1.loadDataWithBaseURL(null, content, "text/html", CallPostURL.ENCODING, null);
 
         Button close = (Button) findViewById(R.id.buttonCloseInternetTest);
         close.setOnClickListener(backToHome);

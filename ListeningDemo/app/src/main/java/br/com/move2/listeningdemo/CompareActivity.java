@@ -10,6 +10,8 @@ import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -28,8 +30,19 @@ public class CompareActivity extends AppCompatActivity {
         Button close = (Button) findViewById(R.id.buttonCloseCompare);
         close.setOnClickListener(backToHome);
 
-        TextView text = (TextView) findViewById(R.id.textCompare);
-        text.setText(text.getText()+"aqui vai o resultado da comparação");
+        File recFile = new File(AudioRecorder.getRecordedFilePath(getBaseContext()));
+        String content = "<html><body><p>No Content</p></body></html>";
+        try{
+            content = new CallPostURL().postAudio(recFile, AudioRecorder.TYPE_RECORDED);
+        }catch (IOException e){
+            //>>>>>>
+            Log.e(getClass().getName(), "erro ao chamar upload de arquivo", e);
+            //<<<<<<
+        }
+
+        WebView web1 = (WebView) findViewById(R.id.webCompare);
+        web1.setWebViewClient(new WebViewClient());
+        web1.loadDataWithBaseURL(null, content, "text/html", CallPostURL.ENCODING, null);
     }
 
     private View.OnClickListener backToHome = new View.OnClickListener(){

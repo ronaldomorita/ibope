@@ -75,4 +75,31 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textSampleName" />
 
+    <WebView
+        android:id="@+id/webSendSample"
+        android:layout_width="wrap_content"
+        android:layout_height="360dp"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headerSendSample" />
+
+    <Button
+        android:id="@+id/buttonCloseSendSample"
+        android:layout_width="88dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/BackgroundButtons"
+        android:text="@string/ButtonClose"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/webSendSample" />
+
+
 </android.support.constraint.ConstraintLayout>

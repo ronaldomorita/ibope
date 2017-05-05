@@ -32,21 +32,15 @@
         app:layout_constraintTop_toBottomOf="@+id/logo1"
         app:layout_constraintVertical_bias="0.12" />
 
-    <TextView
-        android:id="@+id/textCompare"
+    <WebView
+        android:id="@+id/webCompare"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_height="360dp"
         android:layout_marginTop="12dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerCompare"
-        app:layout_constraintVertical_bias="0.12" />
+        app:layout_constraintTop_toBottomOf="@+id/headerCompare" />
 
     <Button
         android:id="@+id/buttonCloseCompare"
@@ -60,6 +54,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textCompare" />
+        app:layout_constraintTop_toBottomOf="@+id/webCompare" />
 
 </android.support.constraint.ConstraintLayout>
