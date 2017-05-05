@@ -2,7 +2,6 @@ package br.com.move2.listeningdemo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -10,8 +9,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,10 +40,14 @@ public class SendSampleActivity extends AppCompatActivity {
 
             findViewById(R.id.buttonSendSample).setVisibility(View.GONE);
 
-            WebView web = (WebView) findViewById(R.id.webSendSample);
-            web.setVisibility(View.VISIBLE);
+            WebView web1 = (WebView) findViewById(R.id.webSendSample);
+            web1.setVisibility(View.VISIBLE);
 
             findViewById(R.id.buttonCloseSendSample).setVisibility(View.VISIBLE);
+
+            String content = "<html><body><h3>Processando... Aguardando resposta do servidor</h3></body></html>";
+            web1.setWebViewClient(new WebViewClient());
+            web1.loadDataWithBaseURL(null, content, "text/html", CallPostURL.ENCODING, null);
 
             String sampleName = textSampleName.getText().toString();
             String basePath = AudioRecorder.getSampleFilePath(getBaseContext());
@@ -54,17 +56,8 @@ public class SendSampleActivity extends AppCompatActivity {
             copySampleFile(basePath,newPath);
 
             File sampFile = new File(newPath);
-            String content = "<html><body><p>No Content</p></body></html>";
-            try{
-                content = new CallPostURL().postAudio(sampFile, AudioRecorder.TYPE_SAMPLE);
-            }catch (IOException e){
-                //>>>>>>
-                Log.e(getClass().getName(), "erro ao chamar upload de arquivo", e);
-                //<<<<<<
-            }
+            new CallPostURL(sampFile, AudioRecorder.TYPE_SAMPLE, web1, getBaseContext()).execute();
 
-            web.setWebViewClient(new WebViewClient());
-            web.loadDataWithBaseURL(null, content, "text/html", CallPostURL.ENCODING, null);
        }
     };
 

@@ -1,8 +1,10 @@
 package br.com.move2.listeningdemo;
 
+import android.content.Context;
 import android.os.AsyncTask;
-import android.os.StrictMode;
 import android.util.Log;
+import android.webkit.WebView;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -14,7 +16,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
 
 /**
  * Created by MariaClaudiaePaulo on 28/04/2017.
@@ -34,8 +35,16 @@ public class CallPostURL extends AsyncTask<String, String, String> {
 
     public static final String ENCODING = "utf-8";
 
-    public CallPostURL() {
-        //set context variables if required
+    private File fileToUpload;
+    int audioType;
+    private WebView webForResult;
+    private Context context;
+
+    public CallPostURL(File fileToUpload, int audioType, WebView webForResult, Context context) {
+        this.fileToUpload = fileToUpload;
+        this.audioType = audioType;
+        this.webForResult = webForResult;
+        this.context = context;
     }
 
     @Override
@@ -45,29 +54,28 @@ public class CallPostURL extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        String urlString = params[0]; // URL to call
-        String resultToDisplay = "";
 
         try {
-            URL url = new URL(urlString);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            Scanner s = new Scanner(new BufferedInputStream(urlConnection.getInputStream())).useDelimiter("\\A");
-            resultToDisplay = s.hasNext() ? s.next() : "";
+            return postAudio();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return e.getMessage();
+            //>>>>>>
+            Log.e(getClass().getName(), "erro ao chamar upload de arquivo", e);
+            //<<<<<<
+            return "<html><body><h3 color=\"red\">Erro ao fazer upload do arquivo: " + e.getMessage() + "</h3></body></html>";
         }
-
-        return resultToDisplay;
     }
 
 
     @Override
     protected void onPostExecute(String result) {
-        //Update the UI
+        if(webForResult == null){
+            Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        }else{
+            webForResult.loadDataWithBaseURL(null, result, "text/html", CallPostURL.ENCODING, null);
+        }
     }
 
-    public String postAudio(File file, int audioType) throws IOException {
+    public String postAudio() throws IOException {
         final long timestamp = System.currentTimeMillis();
         final byte[] timestampByt = (Long.toString(timestamp)).getBytes();
         final String boundary = BOUNDARY_APPEND + Long.toHexString(timestamp) + BOUNDARY_APPEND;
@@ -99,9 +107,8 @@ public class CallPostURL extends AsyncTask<String, String, String> {
 
         try{
             // permit connections in main thread
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                    .permitAll().build();
-            StrictMode.setThreadPolicy(policy);
+            //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            //StrictMode.setThreadPolicy(policy);
 
             // start connection and define multipart
             conn = (HttpURLConnection) ( new URL(postUrl)).openConnection();
@@ -126,8 +133,8 @@ public class CallPostURL extends AsyncTask<String, String, String> {
             }
 
             // read binary file content
-            content = new byte[(int)file.length()];
-            inFileData = new BufferedInputStream(new FileInputStream(file));
+            content = new byte[(int) fileToUpload.length()];
+            inFileData = new BufferedInputStream(new FileInputStream(fileToUpload));
             int totalBytesRead = 0;
             while (totalBytesRead < content.length) {
                 int bytesRemaining = content.length - totalBytesRead;
@@ -139,7 +146,7 @@ public class CallPostURL extends AsyncTask<String, String, String> {
 
             // populate binary file part
             outRequest.write( (DELIMITER + boundary + CRLF).getBytes());
-            outRequest.write( ("Content-Disposition: form-data; name=\"" + fileParamName + "\"; filename=\"" + file.getName() + "\"" + CRLF ).getBytes());
+            outRequest.write( ("Content-Disposition: form-data; name=\"" + fileParamName + "\"; filename=\"" + fileToUpload.getName() + "\"" + CRLF ).getBytes());
             outRequest.write( ("Content-Type: application/octet-stream" + CRLF ).getBytes());
             outRequest.write( ("Content-Length: " + content.length + CRLF ).getBytes());
             outRequest.write( ("Content-Transfer-Encoding: binary" + CRLF ).getBytes());
@@ -162,6 +169,7 @@ public class CallPostURL extends AsyncTask<String, String, String> {
             //>>>>>>
             Log.e(getClass().getName(), "erro ao fazer upload de arquivo", e);
             //<<<<<<
+            return "<html><body><h3 color=\"red\">Erro ao fazer upload do arquivo: " + e.getMessage() + "</h3></body></html>";
         }finally {
             if (conn != null) conn.disconnect();
             if (outRequest != null) outRequest.close();
