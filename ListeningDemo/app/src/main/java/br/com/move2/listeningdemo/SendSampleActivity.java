@@ -26,6 +26,9 @@ public class SendSampleActivity extends AppCompatActivity {
         Button send = (Button) findViewById(R.id.buttonSendSample);
         send.setOnClickListener(sendSample);
 
+        Button cancel = (Button) findViewById(R.id.buttonCancelSendSample);
+        cancel.setOnClickListener(backToHome);
+
         Button close = (Button) findViewById(R.id.buttonCloseSendSample);
         close.setOnClickListener(backToHome);
 
@@ -39,6 +42,7 @@ public class SendSampleActivity extends AppCompatActivity {
             textSampleName.setVisibility(View.GONE);
 
             findViewById(R.id.buttonSendSample).setVisibility(View.GONE);
+            findViewById(R.id.buttonCancelSendSample).setVisibility(View.GONE);
 
             WebView web1 = (WebView) findViewById(R.id.webSendSample);
             web1.setVisibility(View.VISIBLE);
@@ -63,9 +67,6 @@ public class SendSampleActivity extends AppCompatActivity {
 
     private View.OnClickListener backToHome = new View.OnClickListener(){
         public void onClick(View v){
-            Intent intent = new Intent();
-            intent.setClass(SendSampleActivity.this, MainActivity.class);
-            startActivity(intent);
             finish();
         }
     };

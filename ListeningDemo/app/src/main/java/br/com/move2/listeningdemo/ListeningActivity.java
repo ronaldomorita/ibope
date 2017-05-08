@@ -7,29 +7,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.File;
 
 public class ListeningActivity extends AppCompatActivity {
 
+    private static final int RECORD_LENGTH_IN_MILLIS = 12000;
+
     private boolean recording = false;
     private Intent recordService = new Intent();
+    private WebViewListeningHandler webHandler;
 
-    Runnable startServiceRunnable = new Runnable() {
+    private Runnable startServiceRunnable = new Runnable() {
         @Override
         public void run() {
             startService(recordService);
             final Handler handler = new Handler();
-            handler.postDelayed(stopServiceRunnable, 6000);
+            handler.postDelayed(stopServiceRunnable, RECORD_LENGTH_IN_MILLIS);
             //>>>>>>
             Log.i(getClass().getName(), "início");
             //<<<<<<
         }
     };
 
-    Runnable stopServiceRunnable = new Runnable() {
+    private Runnable stopServiceRunnable = new Runnable() {
         @Override
         public void run() {
             stopService(recordService);
@@ -38,7 +41,7 @@ public class ListeningActivity extends AppCompatActivity {
             //<<<<<<
 
             File recFile = new File(AudioRecorder.getRecordedFilePath(getBaseContext()));
-            new CallPostURL(recFile, AudioRecorder.TYPE_RECORDED, (WebView) findViewById(R.id.webCompare), getBaseContext())
+            new CallPostURL(recFile, AudioRecorder.TYPE_RECORDED, webHandler, getBaseContext())
                     .appendRestartScript((recording)?startServiceRunnable:null).execute();
 
         }
@@ -57,6 +60,8 @@ public class ListeningActivity extends AppCompatActivity {
 
         Button close = (Button) findViewById(R.id.buttonCloseCompare);
         close.setOnClickListener(backToHome);
+
+        webHandler = new WebViewListeningHandler((WebView) findViewById(R.id.webCompare));
 
         findViewById(R.id.subtitleListening).setVisibility(View.GONE);
         findViewById(R.id.buttonStopListening).setVisibility(View.INVISIBLE);
@@ -78,12 +83,9 @@ public class ListeningActivity extends AppCompatActivity {
             findViewById(R.id.subtitleListening).setVisibility(View.VISIBLE);
             findViewById(R.id.buttonStopListening).setVisibility(View.VISIBLE);
             findViewById(R.id.subtitleCompare).setVisibility(View.VISIBLE);
+            findViewById(R.id.webCompare).setVisibility(View.VISIBLE);
 
-            String content = "<html><body><p>Aguardando final da gravação.</p></body></html>";
-            WebView web1 = (WebView) findViewById(R.id.webCompare);
-            web1.setVisibility(View.VISIBLE);
-            web1.setWebViewClient(new WebViewClient());
-            web1.loadDataWithBaseURL(null, content, "text/html", CallPostURL.ENCODING, null);
+            webHandler.loadData("<html><body><p>Aguardando final da gravação.</p></body></html>");
 
             recording = true;
 
@@ -98,15 +100,8 @@ public class ListeningActivity extends AppCompatActivity {
     private View.OnClickListener stopListening = new View.OnClickListener(){
         public void onClick(View v){
 
-            String content = "<html><body><h3>Aguardando final da última gravação</h3></body></html>";
-            WebView web1 = (WebView) findViewById(R.id.webCompare);
-            web1.loadDataWithBaseURL(null, content, "text/html", CallPostURL.ENCODING, null);
-
             recording = false;
-
-            //Intent recordService = new Intent();
-            //recordService.setClass(ListeningActivity.this, AudioRecorderService.class);
-            //stopService(recordService);
+            Toast.makeText(getApplicationContext(),"Aguardando final da última gravação",Toast.LENGTH_SHORT);
 
             findViewById(R.id.subtitleListening).setVisibility(View.GONE);
             findViewById(R.id.buttonStopListening).setVisibility(View.GONE);
@@ -118,9 +113,6 @@ public class ListeningActivity extends AppCompatActivity {
 
     private View.OnClickListener backToHome = new View.OnClickListener(){
         public void onClick(View v){
-            Intent intent = new Intent();
-            intent.setClass(ListeningActivity.this, MainActivity.class);
-            startActivity(intent);
             finish();
         }
     };

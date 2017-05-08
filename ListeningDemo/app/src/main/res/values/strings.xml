@@ -18,4 +18,5 @@
     <string name="ButtonPlaySample"><![CDATA[I> Play Amostra]]></string>
     <string name="SampleName">Digite o nome da amostra:</string>
     <string name="ButtonSend">Enviar</string>
+    <string name="ButtonCancel">Cancelar</string>
 </resources>

@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
             Intent activity = new Intent();
             activity.setClass(MainActivity.this, ListeningActivity.class);
             startActivity(activity);
-
-            finish();
         }
     };
 
@@ -49,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
             Intent activity = new Intent();
             activity.setClass(MainActivity.this, SampleActivity.class);
             startActivity(activity);
-
-            finish();
         }
     };
 
@@ -59,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setClass(MainActivity.this, LogsActivity.class);
             startActivity(intent);
-            finish();
         }
     };
 
@@ -68,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setClass(MainActivity.this, InternetTestActivity.class);
             startActivity(intent);
-            finish();
         }
     };
 

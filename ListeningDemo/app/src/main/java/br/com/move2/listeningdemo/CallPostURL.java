@@ -37,17 +37,31 @@ public class CallPostURL extends AsyncTask<String, String, String> {
 
     private File fileToUpload;
     int audioType;
-    private WebView webForResult;
     private Context context;
 
-    private Runnable restartScript = null;
+    private WebView webForResult;
+    private WebViewListeningHandler webHandlerForResult;
+    private Runnable restartScript;
 
-    public CallPostURL(File fileToUpload, int audioType, WebView webForResult, Context context) {
+    private CallPostURL(File fileToUpload, int audioType, Context context) {
         this.fileToUpload = fileToUpload;
         this.audioType = audioType;
-        this.webForResult = webForResult;
         this.context = context;
+        this.webForResult = null;
+        this.webHandlerForResult = null;
+        this.restartScript = null;
     }
+
+    public CallPostURL(File fileToUpload, int audioType, WebView webForResult, Context context) {
+        this(fileToUpload, audioType, context);
+        this.webForResult = webForResult;
+    }
+
+    public CallPostURL(File fileToUpload, int audioType, WebViewListeningHandler webHandlerForResult, Context context) {
+        this(fileToUpload, audioType, context);
+        this.webHandlerForResult = webHandlerForResult;
+    }
+
 
     public CallPostURL appendRestartScript(Runnable restartScript){
         this.restartScript = restartScript;
@@ -75,11 +89,14 @@ public class CallPostURL extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        if(webForResult == null){
-            Toast.makeText(context, result, Toast.LENGTH_LONG).show();
-        }else{
+        if(webForResult != null){
             webForResult.loadDataWithBaseURL(null, result, "text/html", CallPostURL.ENCODING, null);
+        }else if (webHandlerForResult != null) {
+            webHandlerForResult.loadData(result);
+        }else{
+            Toast.makeText(context, result, Toast.LENGTH_LONG).show();
         }
+
         if(restartScript!=null){
             restartScript.run();
             //>>>>>>

@@ -35,9 +35,6 @@ public class InternetTestActivity extends AppCompatActivity {
 
     private View.OnClickListener backToHome = new View.OnClickListener(){
         public void onClick(View v){
-            Intent intent = new Intent();
-            intent.setClass(InternetTestActivity.this, MainActivity.class);
-            startActivity(intent);
             finish();
         }
     };
