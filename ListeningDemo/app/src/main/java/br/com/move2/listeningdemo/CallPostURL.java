@@ -10,12 +10,14 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Created by MariaClaudiaePaulo on 28/04/2017.
@@ -32,6 +34,7 @@ public class CallPostURL extends AsyncTask<String, String, String> {
     private static final String SAMPLE_URL = RECORDED_URL + "loadsample/";
     private static final String RECORDED_PARAMNAME = "recorded";
     private static final String SAMPLE_PARAMNAME = "sample";
+    private static final int GZIP_BUFFER_SIZE = 1024;
 
     public static final String ENCODING = "utf-8";
 
@@ -163,8 +166,10 @@ public class CallPostURL extends AsyncTask<String, String, String> {
             }
 
             // read binary file content
-            content = new byte[(int) fileToUpload.length()];
-            inFileData = new BufferedInputStream(new FileInputStream(fileToUpload));
+            String gzipPath = compressFileToGzip();
+            File gzipFileToUpload = new File(gzipPath);
+            content = new byte[(int) gzipFileToUpload.length()];
+            inFileData = new BufferedInputStream(new FileInputStream(gzipFileToUpload));
             int totalBytesRead = 0;
             while (totalBytesRead < content.length) {
                 int bytesRemaining = content.length - totalBytesRead;
@@ -176,7 +181,7 @@ public class CallPostURL extends AsyncTask<String, String, String> {
 
             // populate binary file part
             outRequest.write( (DELIMITER + boundary + CRLF).getBytes());
-            outRequest.write( ("Content-Disposition: form-data; name=\"" + fileParamName + "\"; filename=\"" + fileToUpload.getName() + "\"" + CRLF ).getBytes());
+            outRequest.write( ("Content-Disposition: form-data; name=\"" + fileParamName + "\"; filename=\"" + gzipFileToUpload.getName() + "\"" + CRLF ).getBytes());
             outRequest.write( ("Content-Type: application/octet-stream" + CRLF ).getBytes());
             outRequest.write( ("Content-Length: " + content.length + CRLF ).getBytes());
             outRequest.write( ("Content-Transfer-Encoding: binary" + CRLF ).getBytes());
@@ -212,5 +217,44 @@ public class CallPostURL extends AsyncTask<String, String, String> {
         return bufferResponse.toString();
     }
 
+    private String compressFileToGzip() {
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        GZIPOutputStream gzipos = null;
+        String gzipPath = "";
+        try {
+            String originalPath = fileToUpload.getPath();
+            gzipPath = originalPath+".gz";
+            fis = new FileInputStream(originalPath);
+            fos = new FileOutputStream(gzipPath);
+            gzipos = new GZIPOutputStream(fos);
+            byte[] buffer = new byte[GZIP_BUFFER_SIZE];
+            int len;
+            while((len=fis.read(buffer)) != -1){
+                gzipos.write(buffer, 0, len);
+            }
+        } catch (IOException e) {
+            //>>>>>>
+            Log.e(getClass().getName(), "erro ao zipar arquivo", e);
+            //<<<<<<
+        } finally {
+            try {
+                if (gzipos != null) {
+                    gzipos.close();
+                }
+                if (gzipos != null) {
+                    fos.close();
+                }
+                if (gzipos != null) {
+                    fis.close();
+                }
+            } catch (IOException e) {
+                //>>>>>>
+                Log.e(getClass().getName(), "erro ao fechar arquivos ao zipar", e);
+                //<<<<<<
+            }
+        }
+        return gzipPath;
+    }
 
 }

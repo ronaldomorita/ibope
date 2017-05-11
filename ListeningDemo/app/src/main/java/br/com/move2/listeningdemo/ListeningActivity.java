@@ -14,7 +14,7 @@ import java.io.File;
 
 public class ListeningActivity extends AppCompatActivity {
 
-    private static final int RECORD_LENGTH_IN_MILLIS = 12000;
+    private static final int RECORD_LENGTH_IN_MILLIS = 30000;
 
     private boolean recording = false;
     private Intent recordService = new Intent();
