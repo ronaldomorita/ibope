@@ -19,9 +19,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.zip.GZIPOutputStream;
 
-/**
- * Created by MariaClaudiaePaulo on 28/04/2017.
- */
 
 public class CallPostURL extends AsyncTask<String, String, String> {
 
@@ -73,11 +70,28 @@ public class CallPostURL extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPreExecute() {
-        super.onPreExecute();
+        //>>>>>>
+        Log.i(getClass().getName(), "onPreExecute()");
+        //<<<<<<
+
+        // zip the file to upload
+        String gzipPath = compressFileToGzip();
+        fileToUpload = new File(gzipPath);
+
+        //  restart recording if available
+        if(restartScript!=null){
+            restartScript.run();
+            //>>>>>>
+            Log.i(getClass().getName(), "reinício");
+            //<<<<<<
+        }
     }
 
     @Override
     protected String doInBackground(String... params) {
+        //>>>>>>
+        Log.i(getClass().getName(), "doInBackground()");
+        //<<<<<<
 
         try {
             return postAudio();
@@ -92,6 +106,9 @@ public class CallPostURL extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
+        //>>>>>>
+        Log.i(getClass().getName(), "onPostExecute()");
+        //<<<<<<
         if(webForResult != null){
             webForResult.loadDataWithBaseURL(null, result, "text/html", CallPostURL.ENCODING, null);
         }else if (webHandlerForResult != null) {
@@ -99,16 +116,13 @@ public class CallPostURL extends AsyncTask<String, String, String> {
         }else{
             Toast.makeText(context, result, Toast.LENGTH_LONG).show();
         }
-
-        if(restartScript!=null){
-            restartScript.run();
-            //>>>>>>
-            Log.i(getClass().getName(), "reinício");
-            //<<<<<<
-        }
+        //>>>>>>
+        Log.i(getClass().getName(), "atualizado");
+        //<<<<<<
     }
 
     public String postAudio() throws IOException {
+        // prepare head data
         final long timestamp = System.currentTimeMillis();
         final byte[] timestampByt = (Long.toString(timestamp)).getBytes();
         final String boundary = BOUNDARY_APPEND + Long.toHexString(timestamp) + BOUNDARY_APPEND;
@@ -139,10 +153,6 @@ public class CallPostURL extends AsyncTask<String, String, String> {
         StringBuffer bufferResponse = new StringBuffer();
 
         try{
-            // permit connections in main thread
-            //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            //StrictMode.setThreadPolicy(policy);
-
             // start connection and define multipart
             conn = (HttpURLConnection) ( new URL(postUrl)).openConnection();
             conn.setRequestMethod("POST");
@@ -166,10 +176,8 @@ public class CallPostURL extends AsyncTask<String, String, String> {
             }
 
             // read binary file content
-            String gzipPath = compressFileToGzip();
-            File gzipFileToUpload = new File(gzipPath);
-            content = new byte[(int) gzipFileToUpload.length()];
-            inFileData = new BufferedInputStream(new FileInputStream(gzipFileToUpload));
+            content = new byte[(int) fileToUpload.length()];
+            inFileData = new BufferedInputStream(new FileInputStream(fileToUpload));
             int totalBytesRead = 0;
             while (totalBytesRead < content.length) {
                 int bytesRemaining = content.length - totalBytesRead;
@@ -181,7 +189,7 @@ public class CallPostURL extends AsyncTask<String, String, String> {
 
             // populate binary file part
             outRequest.write( (DELIMITER + boundary + CRLF).getBytes());
-            outRequest.write( ("Content-Disposition: form-data; name=\"" + fileParamName + "\"; filename=\"" + gzipFileToUpload.getName() + "\"" + CRLF ).getBytes());
+            outRequest.write( ("Content-Disposition: form-data; name=\"" + fileParamName + "\"; filename=\"" + fileToUpload.getName() + "\"" + CRLF ).getBytes());
             outRequest.write( ("Content-Type: application/octet-stream" + CRLF ).getBytes());
             outRequest.write( ("Content-Length: " + content.length + CRLF ).getBytes());
             outRequest.write( ("Content-Transfer-Encoding: binary" + CRLF ).getBytes());
@@ -191,6 +199,9 @@ public class CallPostURL extends AsyncTask<String, String, String> {
 
             // end of multipart/form-data.
             outRequest.write((DELIMITER + boundary + DELIMITER + CRLF).getBytes());
+            //>>>>>>
+            Log.i(getClass().getName(), "enviado");
+            //<<<<<<
 
             // reads response
             inResponse = conn.getInputStream();
@@ -199,6 +210,9 @@ public class CallPostURL extends AsyncTask<String, String, String> {
             while ((line = reader.readLine()) != null) {
                 bufferResponse.append(line);
             }
+            //>>>>>>
+            Log.i(getClass().getName(), "recebido");
+            //<<<<<<
 
         }catch (Exception e){
             //>>>>>>
