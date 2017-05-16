@@ -3,7 +3,6 @@ package br.com.move2.listeningdemo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -12,7 +11,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
-public class ListeningActivity extends AppCompatActivity {
+public class ListeningActivity extends NotifiableActivity {
 
     private static final int RECORD_LENGTH_IN_MILLIS = 30000;
 
@@ -41,7 +40,7 @@ public class ListeningActivity extends AppCompatActivity {
             //<<<<<<
 
             File recFile = new File(AudioRecorder.getRecordedFilePath(getBaseContext()));
-            new CallPostURL(recFile, AudioRecorder.TYPE_RECORDED, webHandler, getBaseContext())
+            new CallPostURL(recFile, AudioRecorder.TYPE_RECORDED, webHandler, ListeningActivity.this)
                     .appendRestartScript((recording)?startServiceRunnable:null).execute();
 
         }
@@ -68,7 +67,7 @@ public class ListeningActivity extends AppCompatActivity {
         findViewById(R.id.subtitleCompare).setVisibility(View.GONE);
         findViewById(R.id.webCompare).setVisibility(View.GONE);
 
-        recordService.setClass(ListeningActivity.this, AudioRecorderService.class);
+        recordService.setClass(this, AudioRecorderService.class);
         recordService.putExtra("AudioType", AudioRecorder.TYPE_RECORDED);
 
     }

@@ -19,4 +19,7 @@
     <string name="SampleName">Digite o nome da amostra:</string>
     <string name="ButtonSend">Enviar</string>
     <string name="ButtonCancel">Cancelar</string>
+    <string name="ButtonNotify">Notificar</string>
+    <string name="TextNotification">Lista de Notificações</string>
+    <string name="ButtonClear">Apagar</string>
 </resources>

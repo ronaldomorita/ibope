@@ -1,8 +1,6 @@
 package br.com.move2.listeningdemo;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -10,7 +8,7 @@ import android.widget.Button;
 
 import java.io.File;
 
-public class InternetTestActivity extends AppCompatActivity {
+public class InternetTestActivity extends NotifiableActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +24,9 @@ public class InternetTestActivity extends AppCompatActivity {
         web1.loadDataWithBaseURL(null, content, "text/html", CallPostURL.ENCODING, null);
 
         File recFile = new File(AudioRecorder.getRecordedFilePath(getBaseContext()));
-        new CallPostURL(recFile, AudioRecorder.TYPE_RECORDED, web1, getBaseContext()).execute();
+        new CallPostURL(recFile, AudioRecorder.TYPE_RECORDED, web1, this).execute();
         //File sampFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"PetrobrasLivreEstou.pcm");
         //new CallPostURL(sampFile, AudioRecorder.TYPE_SAMPLE, web1, getBaseContext()).execute();
-
 
     }
 
@@ -38,5 +35,6 @@ public class InternetTestActivity extends AppCompatActivity {
             finish();
         }
     };
+
 
 }

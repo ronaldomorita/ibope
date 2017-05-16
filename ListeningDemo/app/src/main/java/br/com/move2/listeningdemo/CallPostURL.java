@@ -34,6 +34,8 @@ public class CallPostURL extends AsyncTask<String, String, String> {
     private static final int GZIP_BUFFER_SIZE = 1024;
 
     public static final String ENCODING = "utf-8";
+    public static final String NOTIFIC_BEGIN = "<!-- notific: ";
+    public static final String NOTIFIC_END = " notific-end -->";
 
     private File fileToUpload;
     int audioType;
@@ -119,6 +121,19 @@ public class CallPostURL extends AsyncTask<String, String, String> {
         //>>>>>>
         Log.i(getClass().getName(), "atualizado");
         //<<<<<<
+
+        if(context instanceof NotifiableActivity){
+            String contentToNotify = result;
+            int indNotif;
+            int indEndNotif;
+            while ((indNotif = contentToNotify.indexOf(NOTIFIC_BEGIN))>=0){
+                indEndNotif = contentToNotify.indexOf(NOTIFIC_END,indNotif);
+                String notificContent = contentToNotify.substring(indNotif+NOTIFIC_BEGIN.length(), indEndNotif);
+                String[] notificArr = notificContent.split("\\|");
+                ((NotifiableActivity) context).generateNotification(Integer.parseInt(notificArr[0]),notificArr[1]);
+                contentToNotify = contentToNotify.substring(indEndNotif+NOTIFIC_END.length());
+            }
+        }
     }
 
     public String postAudio() throws IOException {
