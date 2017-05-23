@@ -74,8 +74,6 @@ public class ListeningActivity extends NotifiableActivity {
 
     private View.OnClickListener startListening = new View.OnClickListener(){
         public void onClick(View v){
-            //startService(recordService);
-
             findViewById(R.id.buttonStartListening).setVisibility(View.GONE);
             findViewById(R.id.buttonCloseCompare).setVisibility(View.GONE);
 
@@ -92,7 +90,6 @@ public class ListeningActivity extends NotifiableActivity {
             //>>>>>>
             Log.i(getClass().getName(), "aguardando log");
             //<<<<<<
-
         }
     };
 
@@ -100,7 +97,7 @@ public class ListeningActivity extends NotifiableActivity {
         public void onClick(View v){
 
             recording = false;
-            Toast.makeText(getApplicationContext(),"Aguardando final da última gravação",Toast.LENGTH_SHORT);
+            Toast.makeText(ListeningActivity.this,"Aguardando final da última gravação",Toast.LENGTH_SHORT);
 
             findViewById(R.id.subtitleListening).setVisibility(View.GONE);
             findViewById(R.id.buttonStopListening).setVisibility(View.GONE);

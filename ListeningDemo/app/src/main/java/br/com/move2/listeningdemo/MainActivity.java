@@ -19,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
         Button sample = (Button) findViewById(R.id.buttonSample);
         sample.setOnClickListener(startSample);
 
+        Button speech = (Button) findViewById(R.id.buttonSpeech);
+        speech.setOnClickListener(startSpeechRecognize);
+
         Button logs = (Button) findViewById(R.id.buttonLogs);
         logs.setOnClickListener(goToLogs);
 
@@ -47,6 +50,14 @@ public class MainActivity extends AppCompatActivity {
             Intent activity = new Intent();
             activity.setClass(MainActivity.this, SampleActivity.class);
             startActivity(activity);
+        }
+    };
+
+    private View.OnClickListener startSpeechRecognize = new View.OnClickListener(){
+        public void onClick(View v){
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, SpeechRecognizeActivity.class);
+            startActivity(intent);
         }
     };
 

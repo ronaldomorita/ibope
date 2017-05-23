@@ -105,7 +105,7 @@ public class LogsActivity extends AppCompatActivity {
                 // process results here
                 ArrayList<String> strList = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 if(strList!=null && strList.size()>0){
-                    TextView text1 = (TextView) findViewById(R.id.text1);
+                    TextView text1 = (TextView) findViewById(R.id.textLogs);
                     int countSearch = 0;
                     //>>>>>>
                     for (int i=0; i<strList.size(); i++){

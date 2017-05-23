@@ -25,6 +25,7 @@
         <activity android:name=".InternetTestActivity"></activity>
         <activity android:name=".SendSampleActivity"></activity>
         <activity android:name=".NotificationResultActivity"></activity>
+        <activity android:name=".SpeechRecognizeActivity"></activity>
 
         <service
             android:name=".AudioRecorderService"

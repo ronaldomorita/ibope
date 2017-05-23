@@ -22,4 +22,6 @@
     <string name="ButtonNotify">Notificar</string>
     <string name="TextNotification">Lista de Notificações</string>
     <string name="ButtonClear">Apagar</string>
+    <string name="ButtonRecognizeSpeech">Reconhecer Fala</string>
+    <string name="TitleSpeechRecognize">Reconhecimento de Fala</string>
 </resources>

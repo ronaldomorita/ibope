@@ -20,11 +20,11 @@
         app:srcCompat="@drawable/move2logo" />
 
     <TextView
-        android:id="@+id/headerLogs"
+        android:id="@+id/headerSpeech"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="@string/TitleLogs"
+        android:text="@string/TitleSpeechRecognize"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -33,7 +33,7 @@
         app:layout_constraintVertical_bias="0.12" />
 
     <TextView
-        android:id="@+id/textLogs"
+        android:id="@+id/textSpeech"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
@@ -45,42 +45,42 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerLogs"
+        app:layout_constraintTop_toBottomOf="@+id/headerSpeech"
         app:layout_constraintVertical_bias="0.12" />
 
     <Button
-        android:id="@+id/buttonPlayRecord"
+        android:id="@+id/buttonStartSpeech"
         android:layout_width="88dp"
         android:layout_height="48dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:background="@color/BackgroundButtons"
-        android:text="@string/ButtonPlayRecord"
+        android:text="@string/ButtonStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
         android:textColor="@android:color/white"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLogs" />
+        app:layout_constraintTop_toBottomOf="@+id/textSpeech" />
 
     <Button
-        android:id="@+id/buttonPlaySample"
+        android:id="@+id/buttonStopSpeech"
         android:layout_width="88dp"
         android:layout_height="48dp"
         android:layout_marginTop="24dp"
         android:background="@color/BackgroundButtons"
-        android:text="@string/ButtonPlaySample"
+        android:text="@string/ButtonStop"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
         android:textColor="@android:color/white"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonPlayRecord" />
+        app:layout_constraintTop_toBottomOf="@+id/textSpeech" />
 
     <Button
-        android:id="@+id/buttonCloseLogs"
+        android:id="@+id/buttonCloseSpeech"
         android:layout_width="88dp"
         android:layout_height="48dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="96dp"
         android:background="@color/BackgroundButtons"
         android:text="@string/ButtonClose"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
@@ -88,6 +88,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonPlaySample" />
+        app:layout_constraintTop_toBottomOf="@+id/textSpeech" />
 
 </android.support.constraint.ConstraintLayout>
