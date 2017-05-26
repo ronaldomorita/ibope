@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 public abstract class NotifiableActivity extends AppCompatActivity {
 
     private static final StringBuffer notificationContentBuffer = new StringBuffer("");
-    public static final int RECOGNIZER_OFFER_NOTIFICATION_ID = 9999;
 
     public void generateNotification(int Id, String content){
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)

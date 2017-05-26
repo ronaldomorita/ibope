@@ -2,6 +2,7 @@ package br.com.move2.listeningdemo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -10,6 +11,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,36 +37,58 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
 
     private static boolean recording = false;
 
-    private static final Map<List<List<String>>,String> TEXT_TO_SEARCH = new HashMap<>();
-    static{
-        List<String> synonima;
-        List<List<String>> temp;
+    class Keyword{
+        List<String> synonyms = new ArrayList<>();
 
-        temp = new ArrayList<>();
-        synonima = new ArrayList<>();
-        synonima.add("final de semana");
-        synonima.add("fim de semana");
-        //---
-        temp.add(synonima);
-        synonima = new ArrayList<>();
-        synonima.add("viagem");
-        temp.add(synonima);
-        //---
-        TEXT_TO_SEARCH.put(temp,"Vai viajar no final de semana, consulte aqui os melhores hoteis");
+        public void addSynonym(String synonym){
+            synonyms.add(synonym);
+        }
 
-        temp = new ArrayList<>();
-        synonima = new ArrayList<>();
-        synonima.add("churrasco");
-        synonima.add("churras");
-        //---
-        temp.add(synonima);
-        synonima = new ArrayList<>();
-        synonima.add("futebol");
-        synonima.add("bola");
-        temp.add(synonima);
-        //---
-        TEXT_TO_SEARCH.put(temp,"Tem promoção de Brahma no churrasco com a galera para assistir futebol, confira aqui");
+        public List<String> getSynonyms(){
+            return synonyms;
+        }
     }
+    class Offer{
+        int offerId;
+        String offerContent;
+
+        Offer(int offerId, String offerContent){
+            this.offerId = offerId;
+            this.offerContent = offerContent;
+        }
+
+        public int getOfferId(){
+            return offerId;
+        }
+
+        public String getOfferContent() {
+            return offerContent;
+        }
+    }
+    private static final Map<List<Keyword>,Offer> TEXT_TO_SEARCH = new HashMap<>();
+    private void loadOffers(String offerJson) throws JSONException {
+
+        JSONArray json = new JSONArray(offerJson);
+        for (int i=0; i<json.length(); i++){
+            int offerId = ((JSONObject) json.get(i)).getInt("offer_id");
+            String offerContent = ((JSONObject) json.get(i)).getString("content");
+            Offer offer = new Offer(offerId,offerContent);
+
+            List<Keyword> keywords = new ArrayList<>();
+            JSONArray keywordsJson = ((JSONObject) json.get(i)).getJSONArray("keywords");
+            for (int j=0; j<keywordsJson.length(); j++){
+                Keyword kw = new Keyword();
+                JSONArray synonymsJson = ((JSONArray) keywordsJson.get(j));
+                for (int k=0; k<synonymsJson.length(); k++){
+                    kw.addSynonym(synonymsJson.getString(k));
+                }
+                keywords.add(kw);
+            }
+            TEXT_TO_SEARCH.put(keywords,offer);
+        }
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +104,24 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
         startButton.setOnClickListener(startSpeech);
 
         stopButton.setOnClickListener(stopSpeech);
-
-        ((recording)? startButton : stopButton).setVisibility(View.GONE);
+        if(!recording) {
+            try {
+                startButton.setVisibility(View.GONE);
+                stopButton.setVisibility(View.GONE);
+                String offerJson = getOffersJson();
+                loadOffers(offerJson);
+                startButton.setVisibility(View.VISIBLE);
+            } catch (Exception e) {
+                //>>>>>>
+                Log.e(getClass().getName(), "Erro ao carregar ofertas de keyword", e);
+                //<<<<<<
+            }
+        }else{
+            startButton.setVisibility(View.GONE);
+        }
 
         findViewById(R.id.buttonCloseSpeech).setOnClickListener(backToHome);
+
     }
 
     private View.OnClickListener startSpeech = new View.OnClickListener(){
@@ -179,7 +226,7 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
                     recognizedList = new ArrayList<>();
                 }
 
-                List<String> offers = new ArrayList<>();
+                List<Offer> offers = new ArrayList<>();
 
                 for (String recognized : recognizedList) {
                     //>>>>>>
@@ -187,13 +234,13 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
                     //<<<<<<
                     recognized = recognized.toLowerCase();
 
-                    Set<List<List<String>>> setToSearch = TEXT_TO_SEARCH.keySet();
-                    for (List<List<String>> listToSearch : setToSearch) {
+                    Set<List<Keyword>> setToSearch = TEXT_TO_SEARCH.keySet();
+                    for (List<Keyword> listToSearch : setToSearch) {
 
                         boolean found = true;
-                        for (List<String> synonimaToSearch : listToSearch) {
+                        for (Keyword synonymsToSearch : listToSearch) {
                             boolean synFound = false;
-                            for (String textToSearch : synonimaToSearch) {
+                            for (String textToSearch : synonymsToSearch.getSynonyms()) {
                                 synFound |= recognized.contains(textToSearch);
                             }
                             found &= synFound;
@@ -204,8 +251,8 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
                     }
                 }
 
-                for (String offer : offers) {
-                    generateNotification(RECOGNIZER_OFFER_NOTIFICATION_ID,offer);
+                for (Offer offer : offers) {
+                    generateNotification(offer.getOfferId(),offer.getOfferContent());
                 }
                 if(recognizedList.size()>0){
                     textContainer.setText("Transcrição mais provável:\n"+recognizedList.get(0));
@@ -228,6 +275,57 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS,false);
         sr.startListening(intent);
 
+    }
+
+
+    public String getOffersJson() throws IOException {
+        String url = CallPostURL.OFFERS_URL;
+
+        HttpURLConnection conn = null;
+        InputStream inResponse = null;
+
+        StringBuffer bufferResponse = new StringBuffer();
+
+        try{
+            // permit connections in main thread
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            // start connection and define multipart
+            conn = (HttpURLConnection) ( new URL(url)).openConnection();
+            conn.setRequestMethod("GET");
+            conn.setDoOutput(true);
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            //conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+            conn.connect();
+            //>>>>>>
+            Log.i(getClass().getName(), "enviado para "+url);
+            //<<<<<<
+
+            // reads response
+            inResponse = conn.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inResponse,CallPostURL.ENCODING));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                bufferResponse.append(line);
+            }
+            //>>>>>>
+            Log.i(getClass().getName(), "recebido");
+            //<<<<<<
+
+        }catch (Exception e){
+            //>>>>>>
+            Log.e(getClass().getName(), "Erro ao carregar ofertas de keyword", e);
+            //<<<<<<
+            return "[{\"error\": \"Erro ao carregar ofertas de keyword: " + e.getMessage() + "\"";
+        }finally {
+            if (conn != null) conn.disconnect();
+            if (inResponse !=null) inResponse.close();
+        }
+        //>>>>>>
+        Log.w(getClass().getName(), "conteúdo JSON recebido: "+bufferResponse.toString());
+        //<<<<<<
+        return bufferResponse.toString();
     }
 
 }

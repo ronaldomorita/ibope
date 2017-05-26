@@ -27,8 +27,9 @@ public class CallPostURL extends AsyncTask<String, String, String> {
     private static final String CRLF = "\r\n"; // Line separator required by multipart/form-data.
     private static final String DELIMITER = "--";
 
-    private static final String RECORDED_URL = "http://ec2-54-224-63-179.compute-1.amazonaws.com/";
-    private static final String SAMPLE_URL = RECORDED_URL + "loadsample/";
+    public static final String RECORDED_URL = "http://ec2-54-224-63-179.compute-1.amazonaws.com/";
+    public static final String SAMPLE_URL = RECORDED_URL + "loadsample";
+    public static final String OFFERS_URL = RECORDED_URL + "loadoffers";
     private static final String RECORDED_PARAMNAME = "recorded";
     private static final String SAMPLE_PARAMNAME = "sample";
     private static final int GZIP_BUFFER_SIZE = 1024;
