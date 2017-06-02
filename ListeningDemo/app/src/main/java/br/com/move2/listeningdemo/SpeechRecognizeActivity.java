@@ -100,7 +100,6 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
         startButton = (Button) findViewById(R.id.buttonStartSpeech);
         stopButton = (Button) findViewById(R.id.buttonStopSpeech);
 
-
         startButton.setOnClickListener(startSpeech);
 
         stopButton.setOnClickListener(stopSpeech);
@@ -195,16 +194,14 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
             public void onReadyForSpeech(Bundle params) {
                 setTextContainerContent("Pronto para escutar");
                 //>>>>>>
-                Log.w(getClass().getName(), "Pronto para escutar");
+                Log.i(getClass().getName(), "Pronto para escutar");
                 //<<<<<<
 
             }
 
             @Override
             public void onBeginningOfSpeech() {
-                //>>>>>>
-                Log.w(getClass().getName(), "Início da fala");
-                //<<<<<<
+
             }
 
             @Override
@@ -219,9 +216,6 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
 
             @Override
             public void onEndOfSpeech() {
-                //>>>>>>
-                Log.w(getClass().getName(), "Terminou de falar");
-                //<<<<<<
             }
 
             @Override
@@ -230,7 +224,7 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
                 if(recognizedList!=null) {
                     for (String recognized : recognizedList) {
                         //>>>>>>
-                        Log.w(SpeechRecognizeActivity.class.getName(), "partial"+recognized);
+                        Log.i(SpeechRecognizeActivity.class.getName(), "partial"+recognized);
                         //<<<<<<
                     }
                 }
@@ -248,7 +242,7 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
 
                 for (String recognized : recognizedList) {
                     //>>>>>>
-                    Log.w(SpeechRecognizeActivity.class.getName(), recognized);
+                    Log.i(SpeechRecognizeActivity.class.getName(), recognized);
                     //<<<<<<
                     recognized = recognized.toLowerCase();
 
@@ -283,7 +277,7 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
             public void onError(int error) {
                 setTextContainerContent("Fala não identificada");
                 //>>>>>>
-                Log.w(getClass().getName(), "onError: "+ error);
+                Log.i(getClass().getName(), "onError: "+ error);
                 //<<<<<<
                 startRecognizer();
             }
@@ -342,7 +336,7 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
             if (inResponse !=null) inResponse.close();
         }
         //>>>>>>
-        Log.w(getClass().getName(), "conteúdo JSON recebido: "+bufferResponse.toString());
+        Log.i(getClass().getName(), "conteúdo JSON recebido: "+bufferResponse.toString());
         //<<<<<<
         return bufferResponse.toString();
     }

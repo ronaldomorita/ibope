@@ -11,31 +11,31 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.util.Log;
 
-public class AudioRecorder {
+class AudioRecorder {
 
-    public enum State {INITIALIZING, READY, RECORDING, ERROR, STOPPED};
+    private enum State {INITIALIZING, READY, RECORDING, ERROR, STOPPED};
 
-    public static final int SOURCE = MediaRecorder.AudioSource.MIC;
-    public static final int SAMPLE_RATE_IN_HZ = 44100;
-    public static final int CHANNEL_IN_CONFIG = AudioFormat.CHANNEL_IN_MONO;
-    public static final int CHANNEL_OUT_CONFIG = AudioFormat.CHANNEL_OUT_MONO;
-    public static final int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
-    public static final int BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE_IN_HZ, CHANNEL_IN_CONFIG, AUDIO_FORMAT);
+    static final int SOURCE = MediaRecorder.AudioSource.MIC;
+    static final int SAMPLE_RATE_IN_HZ = 44100;
+    static final int CHANNEL_IN_CONFIG = AudioFormat.CHANNEL_IN_MONO;
+    static final int CHANNEL_OUT_CONFIG = AudioFormat.CHANNEL_OUT_MONO;
+    static final int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
+    static final int BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE_IN_HZ, CHANNEL_IN_CONFIG, AUDIO_FORMAT);
 
-    public static final int TYPE_RECORDED = 1;
-    public static final int TYPE_SAMPLE = 2;
-    public static final int NO_TYPE_DEFINED = 99;
+    static final int TYPE_RECORDED = 1;
+    static final int TYPE_SAMPLE = 2;
+    static final int NO_TYPE_DEFINED = 99;
 
     private static final String RECORDED_FILE_NAME = "recorded.pcm";
     private static final String SAMPLE_FILE_NAME = "sample.pcm";
 
     private State state;
     private int type;
-    public AudioRecord audioRecorder = null;
+    private AudioRecord audioRecorder = null;
     FileOutputStream os = null;
-    volatile Thread t = null;
+    private volatile Thread t = null;
 
-    public AudioRecorder(Context context, int typeToRecord)
+    AudioRecorder(Context context, int typeToRecord)
     {
         //>>>>>>
         Log.d(getClass().getName(), "criando recorder");
@@ -59,7 +59,7 @@ public class AudioRecorder {
                     filePath = getRecordedFilePath(context);
             }
             //>>>>>>
-            Log.i(getClass().getName(), "filePath: "+filePath);
+            Log.d(getClass().getName(), "filePath: "+filePath);
             //<<<<<<
             os = new FileOutputStream(filePath);
             state = State.READY;
@@ -72,31 +72,7 @@ public class AudioRecorder {
         }
     }
 
-//    private AudioRecord.OnRecordPositionUpdateListener updateListener = new AudioRecord.OnRecordPositionUpdateListener() {
-//
-//        @Override
-//        public void onPeriodicNotification(AudioRecord recorder) {
-//
-//            try{
-//                // Log.d(Constant.APP_LOG,"Into Periodic Notification...");
-//                audioRecorder.read(audioBuffer, 0, BUFFER_SIZE);
-//                tempAudioFile.write(audioBuffer);
-//                audioBuffer = new byte[BUFFER_SIZE];
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//
-//        }
-//
-//        @Override
-//        public void onMarkerReached(AudioRecord recorder) {
-//
-//        }
-//
-//    };
-
-    public void start() {
+    void start() {
         //>>>>>>
         Log.d(getClass().getName(), "iniciando recorder " + state);
         //<<<<<<
@@ -174,7 +150,7 @@ public class AudioRecorder {
         }
     }
 
-    public void stop() {
+    void stop() {
         //>>>>>>
         Log.d(getClass().getName(), "parando recorder");
         //<<<<<<
@@ -198,15 +174,11 @@ public class AudioRecorder {
         }
     }
 
-    public State getState()  {
+    private State getState()  {
         return state;
     }
 
-    public int getType()  {
-        return type;
-    }
-
-    public static String getRecordedFilePath(Context context){
+    static String getRecordedFilePath(Context context){
         return
                 new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),RECORDED_FILE_NAME).getPath();
 
@@ -215,7 +187,7 @@ public class AudioRecorder {
                 //File.separator + RECORDED_FILE_NAME;
     }
 
-    public static String getSampleFilePath(Context context){
+    static String getSampleFilePath(Context context){
         return
                 new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),SAMPLE_FILE_NAME).getPath();
 

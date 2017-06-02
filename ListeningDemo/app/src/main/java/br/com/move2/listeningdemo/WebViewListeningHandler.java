@@ -4,7 +4,7 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class WebViewListeningHandler {
+class WebViewListeningHandler {
 
     private WebView webView;
     private String currContent;
@@ -16,7 +16,7 @@ public class WebViewListeningHandler {
     private static final String COLOR_EVEN = "#FFFFFF";
 
 
-    public WebViewListeningHandler(WebView givenWebView){
+    WebViewListeningHandler(WebView givenWebView){
         webView = givenWebView;
         webView.setWebViewClient(new WebViewClient());
         currContent = "";
@@ -29,7 +29,7 @@ public class WebViewListeningHandler {
         int indNewStart  =  newContent.indexOf(CONTENT_START);
         int indNewEnd    =  newContent.indexOf(CONTENT_END  );
 
-        String contentToLoad = "";
+        String contentToLoad;
         if(indCurrStart>=0 && indCurrEnd>indCurrStart &&
                 indNewStart>=0 && indNewEnd>indNewStart ){
 
@@ -46,9 +46,9 @@ public class WebViewListeningHandler {
 
             contentToLoad = currContent.substring(0,indCurrStart+CONTENT_START.length())+subNewContent+currContent.substring(indCurrStart+CONTENT_START.length());
             //>>>>>>
-            Log.i(getClass().getName(), "newContent:\n"+newContent);
-            Log.i(getClass().getName(), "subNewContent:\n"+subNewContent);
-            Log.i(getClass().getName(), "contentToLoad:\n"+contentToLoad);
+            Log.d(getClass().getName(), "newContent:\n"+newContent);
+            Log.d(getClass().getName(), "subNewContent:\n"+subNewContent);
+            Log.d(getClass().getName(), "contentToLoad:\n"+contentToLoad);
             //<<<<<<
 
         }else{

@@ -75,7 +75,7 @@ public class LogsActivity extends AppCompatActivity {
                 playShortAudioFileViaAudioTrack(recordedFilePath);
             }catch (IOException e){
                 //>>>>>>
-                Log.i(LogsActivity.class.getName(), "erro ao abrir arquivo para reprodução", e);
+                Log.e(LogsActivity.class.getName(), "erro ao abrir arquivo para reprodução", e);
                 //<<<<<<
             }
         }
@@ -87,7 +87,7 @@ public class LogsActivity extends AppCompatActivity {
                 playShortAudioFileViaAudioTrack(sampleFilePath);
             }catch (IOException e){
                 //>>>>>>
-                Log.i(LogsActivity.class.getName(), "erro ao abrir arquivo para reprodução", e);
+                Log.e(LogsActivity.class.getName(), "erro ao abrir arquivo para reprodução", e);
                 //<<<<<<
             }
         }
@@ -107,7 +107,6 @@ public class LogsActivity extends AppCompatActivity {
                 if(strList!=null && strList.size()>0){
                     TextView text1 = (TextView) findViewById(R.id.textLogs);
                     int countSearch = 0;
-                    //>>>>>>
                     for (int i=0; i<strList.size(); i++){
                         String text = strList.get(i).toLowerCase();
                         int count=0;
@@ -117,10 +116,11 @@ public class LogsActivity extends AppCompatActivity {
                         }
                         countSearch = Math.max(countSearch,count);
                         //>>>>>>
-                        Log.w(LogsActivity.class.getName(), strList.get(i));
+                        Log.i(LogsActivity.class.getName(), strList.get(i));
                         //<<<<<<
                     }
-                    text1.setText("Transcrição mais provável:\n"+strList.get(0));
+                    String text = "Transcrição mais provável:\n" + strList.get(0);
+                    text1.setText(text);
                     if(countSearch>0){
                         text1.setText("\n"+text1.getText()+"\nTotal máximo de "+TEXT_TO_SEARCH+": "+countSearch);
                     }
@@ -131,13 +131,14 @@ public class LogsActivity extends AppCompatActivity {
             @Override
             public void onPartialResults(Bundle partialResults) {
                 ArrayList<String> strList = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                for (int i=0; i<strList.size(); i++){
-                    String text = strList.get(i).toLowerCase();
-                    //>>>>>>
-                    Log.i(LogsActivity.class.getName(), strList.get(i));
-                    //<<<<<<
+                if(strList!=null) {
+                    for (int i = 0; i < strList.size(); i++) {
+                        String text = strList.get(i).toLowerCase();
+                        //>>>>>>
+                        Log.i(LogsActivity.class.getName(), text);
+                        //<<<<<<
+                    }
                 }
-
             }
 
             @Override
@@ -169,18 +170,12 @@ public class LogsActivity extends AppCompatActivity {
                         AudioManager.STREAM_MUSIC, AudioRecorder.SAMPLE_RATE_IN_HZ,
                         AudioRecorder.CHANNEL_OUT_CONFIG, AudioRecorder.AUDIO_FORMAT,
                         AudioRecorder.BUFFER_SIZE, AudioTrack.MODE_STREAM);
-                if (at!=null) {
-                    at.play();
-                    // Write the byte array to the track
-                    at.write(byteData, 0, byteData.length);
-                    at.stop();
-                    at.release();
-                }
-                else {
-                    //>>>>>>
-                    Log.w(getClass().getName(), "audio track is not initialised");
-                    //<<<<<<
-                }
+                at.play();
+
+                // Write the byte array to the track
+                at.write(byteData, 0, byteData.length);
+                at.stop();
+                at.release();
 
             }
 
@@ -215,19 +210,14 @@ public class LogsActivity extends AppCompatActivity {
 
         });
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
         // the following appears to be a requirement, but can be a "dummy" value
         //intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.move2");
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS,true);
         // define any other intent extras you want
 
-        // start playback of audio clip here
-
         // this will start the speech recognizer service in the background
         // without starting a separate activity
         sr.startListening(intent);
-        //sr.stopListening();
-
-
     }
-
 }

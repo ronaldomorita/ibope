@@ -26,7 +26,7 @@ public class ListeningActivity extends NotifiableActivity {
             final Handler handler = new Handler();
             handler.postDelayed(stopServiceRunnable, RECORD_LENGTH_IN_MILLIS);
             //>>>>>>
-            Log.i(getClass().getName(), "início");
+            Log.d(getClass().getName(), "início");
             //<<<<<<
         }
     };
@@ -36,7 +36,7 @@ public class ListeningActivity extends NotifiableActivity {
         public void run() {
             stopService(recordService);
             //>>>>>>
-            Log.i(getClass().getName(), "fim");
+            Log.d(getClass().getName(), "fim");
             //<<<<<<
 
             File recFile = new File(AudioRecorder.getRecordedFilePath(getBaseContext()));
@@ -87,9 +87,6 @@ public class ListeningActivity extends NotifiableActivity {
             recording = true;
 
             startServiceRunnable.run();
-            //>>>>>>
-            Log.i(getClass().getName(), "aguardando log");
-            //<<<<<<
         }
     };
 

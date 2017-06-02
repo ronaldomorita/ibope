@@ -24,7 +24,7 @@ class CallPostURL extends AsyncTask<String, String, String> {
 
 
     private static final String BOUNDARY_APPEND = "pac";
-    private static final String CRLF = "\r\n"; // Line separator required by multipart/form-data.
+    private static final String CRLF = "\r\n";
     private static final String DELIMITER = "--";
 
     static final String RECORDED_URL = "http://ec2-54-224-63-179.compute-1.amazonaws.com/";
@@ -73,10 +73,6 @@ class CallPostURL extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPreExecute() {
-        //>>>>>>
-        Log.i(getClass().getName(), "onPreExecute()");
-        //<<<<<<
-
         // zip the file to upload
         String gzipPath = compressFileToGzip();
         fileToUpload = new File(gzipPath);
@@ -92,10 +88,6 @@ class CallPostURL extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        //>>>>>>
-        Log.i(getClass().getName(), "doInBackground()");
-        //<<<<<<
-
         try {
             return postAudio();
         } catch (Exception e) {
@@ -109,9 +101,6 @@ class CallPostURL extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        //>>>>>>
-        Log.i(getClass().getName(), "onPostExecute()");
-        //<<<<<<
         if(webForResult != null){
             webForResult.loadDataWithBaseURL(null, result, "text/html", CallPostURL.ENCODING, null);
         }else if (webHandlerForResult != null) {

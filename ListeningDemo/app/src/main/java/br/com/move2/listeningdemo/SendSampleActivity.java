@@ -1,6 +1,5 @@
 package br.com.move2.listeningdemo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -73,9 +72,9 @@ public class SendSampleActivity extends AppCompatActivity {
 
     private void copySampleFile(String basePath, String newPath) {
         //>>>>>>
-        Log.i(getClass().getName(), "iniciando cópia do arquivo");
-        Log.i(getClass().getName(), "input "+basePath);
-        Log.i(getClass().getName(), "output "+newPath);
+        Log.d(getClass().getName(), "iniciando cópia do arquivo");
+        Log.d(getClass().getName(), "input "+basePath);
+        Log.d(getClass().getName(), "output "+newPath);
         //<<<<<<
         FileInputStream inFile = null;
         FileOutputStream outFile = null;
