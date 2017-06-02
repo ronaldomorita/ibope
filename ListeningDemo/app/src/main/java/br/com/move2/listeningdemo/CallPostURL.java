@@ -20,26 +20,26 @@ import java.net.URL;
 import java.util.zip.GZIPOutputStream;
 
 
-public class CallPostURL extends AsyncTask<String, String, String> {
+class CallPostURL extends AsyncTask<String, String, String> {
 
 
     private static final String BOUNDARY_APPEND = "pac";
     private static final String CRLF = "\r\n"; // Line separator required by multipart/form-data.
     private static final String DELIMITER = "--";
 
-    public static final String RECORDED_URL = "http://ec2-54-224-63-179.compute-1.amazonaws.com/";
-    public static final String SAMPLE_URL = RECORDED_URL + "loadsample";
-    public static final String OFFERS_URL = RECORDED_URL + "loadoffers";
+    static final String RECORDED_URL = "http://ec2-54-224-63-179.compute-1.amazonaws.com/";
+    static final String SAMPLE_URL = RECORDED_URL + "loadsample";
+    static final String OFFERS_URL = RECORDED_URL + "loadoffers";
     private static final String RECORDED_PARAMNAME = "recorded";
     private static final String SAMPLE_PARAMNAME = "sample";
     private static final int GZIP_BUFFER_SIZE = 1024;
 
-    public static final String ENCODING = "utf-8";
-    public static final String NOTIFIC_BEGIN = "<!-- notific: ";
-    public static final String NOTIFIC_END = " notific-end -->";
+    static final String ENCODING = "utf-8";
+    private static final String NOTIFIC_BEGIN = "<!-- notific: ";
+    private static final String NOTIFIC_END = " notific-end -->";
 
     private File fileToUpload;
-    int audioType;
+    private int audioType;
     private Context context;
 
     private WebView webForResult;
@@ -55,18 +55,18 @@ public class CallPostURL extends AsyncTask<String, String, String> {
         this.restartScript = null;
     }
 
-    public CallPostURL(File fileToUpload, int audioType, WebView webForResult, Context context) {
+    CallPostURL(File fileToUpload, int audioType, WebView webForResult, Context context) {
         this(fileToUpload, audioType, context);
         this.webForResult = webForResult;
     }
 
-    public CallPostURL(File fileToUpload, int audioType, WebViewListeningHandler webHandlerForResult, Context context) {
+    CallPostURL(File fileToUpload, int audioType, WebViewListeningHandler webHandlerForResult, Context context) {
         this(fileToUpload, audioType, context);
         this.webHandlerForResult = webHandlerForResult;
     }
 
 
-    public CallPostURL appendRestartScript(Runnable restartScript){
+    CallPostURL appendRestartScript(Runnable restartScript){
         this.restartScript = restartScript;
         return this;
     }
@@ -137,7 +137,7 @@ public class CallPostURL extends AsyncTask<String, String, String> {
         }
     }
 
-    public String postAudio() throws IOException {
+    private String postAudio() throws IOException {
         // prepare head data
         final long timestamp = System.currentTimeMillis();
         final byte[] timestampByt = (Long.toString(timestamp)).getBytes();
@@ -166,7 +166,7 @@ public class CallPostURL extends AsyncTask<String, String, String> {
         InputStream inFileData = null;
         InputStream inResponse = null;
 
-        StringBuffer bufferResponse = new StringBuffer();
+        StringBuilder bufferResponse = new StringBuilder();
 
         try{
             // start connection and define multipart
@@ -177,7 +177,6 @@ public class CallPostURL extends AsyncTask<String, String, String> {
             conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
             conn.connect();
 
-            byte[] content = {};
             outRequest = conn.getOutputStream();
 
             // populate regular params part
@@ -192,7 +191,7 @@ public class CallPostURL extends AsyncTask<String, String, String> {
             }
 
             // read binary file content
-            content = new byte[(int) fileToUpload.length()];
+            byte[] content = new byte[(int) fileToUpload.length()];
             inFileData = new BufferedInputStream(new FileInputStream(fileToUpload));
             int totalBytesRead = 0;
             while (totalBytesRead < content.length) {

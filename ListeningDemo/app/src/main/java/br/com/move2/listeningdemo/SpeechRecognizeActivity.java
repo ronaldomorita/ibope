@@ -36,19 +36,20 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
     private Button stopButton;
 
     private static boolean recording = false;
+    private static String recognized = "";
 
-    class Keyword{
+    private class Keyword{
         List<String> synonyms = new ArrayList<>();
 
-        public void addSynonym(String synonym){
+        void addSynonym(String synonym){
             synonyms.add(synonym);
         }
 
-        public List<String> getSynonyms(){
+        List<String> getSynonyms(){
             return synonyms;
         }
     }
-    class Offer{
+    private class Offer{
         int offerId;
         String offerContent;
 
@@ -57,11 +58,11 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
             this.offerContent = offerContent;
         }
 
-        public int getOfferId(){
+        int getOfferId(){
             return offerId;
         }
 
-        public String getOfferContent() {
+        String getOfferContent() {
             return offerContent;
         }
     }
@@ -99,13 +100,15 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
         startButton = (Button) findViewById(R.id.buttonStartSpeech);
         stopButton = (Button) findViewById(R.id.buttonStopSpeech);
 
-        textContainer.setText("Aguardando início do reconhecimento da fala");
 
         startButton.setOnClickListener(startSpeech);
 
         stopButton.setOnClickListener(stopSpeech);
         if(!recording) {
             try {
+                recognized = "";
+                setTextContainerContent("Carregando Ofertas...");
+
                 startButton.setVisibility(View.GONE);
                 stopButton.setVisibility(View.GONE);
                 String offerJson = getOffersJson();
@@ -120,16 +123,27 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
             startButton.setVisibility(View.GONE);
         }
 
+        setTextContainerContent("Aguardando início do reconhecimento da fala...");
+
         findViewById(R.id.buttonCloseSpeech).setOnClickListener(backToHome);
 
+    }
+
+    private void setTextContainerContent(String disclaimer, String newRecognition){
+        if(newRecognition.length()>0){
+            recognized = newRecognition+"\n"+recognized;
+        }
+        textContainer.setText(disclaimer+"\n\n"+recognized);
+    }
+
+    private void setTextContainerContent(String disclaimer){
+        setTextContainerContent(disclaimer,"");
     }
 
     private View.OnClickListener startSpeech = new View.OnClickListener(){
         public void onClick(View v){
             startButton.setVisibility(View.GONE);
             stopButton.setVisibility(View.VISIBLE);
-
-            textContainer.setText("Reconhecimento iniciado");
 
             recording = true;
             startRecognizer();
@@ -140,8 +154,6 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
         public void onClick(View v){
             startButton.setVisibility(View.VISIBLE);
             stopButton.setVisibility(View.GONE);
-
-            textContainer.setText(textContainer.getText()+"\nReconhecimento finalizado");
 
             recording = false;
             sr.stopListening();
@@ -167,6 +179,7 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
             sr.destroy();
         }
         if (!recording){
+            setTextContainerContent("Reconhecimento finalizado");
             return;
         }
 
@@ -180,13 +193,17 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
 
             @Override
             public void onReadyForSpeech(Bundle params) {
+                setTextContainerContent("Pronto para escutar");
+                //>>>>>>
+                Log.w(getClass().getName(), "Pronto para escutar");
+                //<<<<<<
 
             }
 
             @Override
             public void onBeginningOfSpeech() {
                 //>>>>>>
-                Log.w(getClass().getName(), "começou a falar");
+                Log.w(getClass().getName(), "Início da fala");
                 //<<<<<<
             }
 
@@ -203,7 +220,7 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
             @Override
             public void onEndOfSpeech() {
                 //>>>>>>
-                Log.w(getClass().getName(), "terminou de falar");
+                Log.w(getClass().getName(), "Terminou de falar");
                 //<<<<<<
             }
 
@@ -221,6 +238,7 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
 
             @Override
             public void onResults(Bundle results) {
+                setTextContainerContent("Fazendo reconhecimento da fala");
                 List<String> recognizedList = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 if(recognizedList==null) {
                     recognizedList = new ArrayList<>();
@@ -255,7 +273,7 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
                     generateNotification(offer.getOfferId(),offer.getOfferContent());
                 }
                 if(recognizedList.size()>0){
-                    textContainer.setText("Transcrição mais provável:\n"+recognizedList.get(0));
+                    setTextContainerContent("Transcrição mais provável:",recognizedList.get(0));
                 }
                 startRecognizer();
 
@@ -263,6 +281,7 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
 
             @Override
             public void onError(int error) {
+                setTextContainerContent("Fala não identificada");
                 //>>>>>>
                 Log.w(getClass().getName(), "onError: "+ error);
                 //<<<<<<
@@ -284,7 +303,7 @@ public class SpeechRecognizeActivity extends NotifiableActivity {
         HttpURLConnection conn = null;
         InputStream inResponse = null;
 
-        StringBuffer bufferResponse = new StringBuffer();
+        StringBuilder bufferResponse = new StringBuilder();
 
         try{
             // permit connections in main thread

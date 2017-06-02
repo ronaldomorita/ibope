@@ -97,7 +97,7 @@ public class ListeningActivity extends NotifiableActivity {
         public void onClick(View v){
 
             recording = false;
-            Toast.makeText(ListeningActivity.this,"Aguardando final da última gravação",Toast.LENGTH_SHORT);
+            Toast.makeText(ListeningActivity.this,"Aguardando final da última gravação",Toast.LENGTH_SHORT).show();
 
             findViewById(R.id.subtitleListening).setVisibility(View.GONE);
             findViewById(R.id.buttonStopListening).setVisibility(View.GONE);
